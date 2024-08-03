@@ -1,15 +1,19 @@
 <template>
     <header class="top-bar">
-        Welcome, <b>{{username}}</b> - <span @click="logout">logout</span>
+        Welcome, <b>{{ username }}</b> - <a href="#" @click="logout">
+        <font-awesome-icon :icon="['fas','power-off']"/>
+        Logout</a>
     </header>
 </template>
 
 <script>
 import axios from 'axios';
 import {useRouter} from "vue-router";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 export default {
     name: 'TopBar',
+    components: {FontAwesomeIcon},
     props: {
         username: {
             type: String,
