@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Unit;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -16,7 +15,7 @@ class EmployeeController extends Controller
         return Inertia::render('User');
     }
 
-    public function employeePaginated(Request $request)
+    public function employeePaginated(Request $request): \Illuminate\Http\JsonResponse
     {
         $employees = User::with('unit', 'positions')->orderBy('id', 'desc');
 

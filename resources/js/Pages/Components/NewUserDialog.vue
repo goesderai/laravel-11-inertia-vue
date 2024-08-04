@@ -43,7 +43,8 @@
                                 push-tags
                                 :options="positions"
                                 v-model="selectedPosition" />
-                            <button type="button" class="mt-3 btn btn-danger" @click="addItem">Add Position</button>
+                            <button type="button" class="mt-3 btn btn-outline-success" @click="addItem">Add Position
+                            </button>
                         </div>
 
                         <div class="mb-3">
@@ -55,7 +56,7 @@
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Add New User</button>
+                            <button type="submit" class="btn w-100 btn-outline-primary">Add New Employee</button>
                         </div>
                     </form>
                 </div>
@@ -66,13 +67,12 @@
 </template>
 
 <script>
-import {ref, onMounted, getCurrentInstance} from "vue";
+import {getCurrentInstance, onMounted, ref} from "vue";
 import {usePage} from "@inertiajs/inertia-vue3";
 import axios from 'axios';
 import 'vue-select/dist/vue-select.css'; // Import CSS
 import vSelect from 'vue-select';
-import toast from "bootstrap/js/src/toast.js";
-import { useToast } from 'vue-toastification';
+import {useToast} from 'vue-toastification';
 
 export default {
     components: {vSelect},
@@ -90,10 +90,20 @@ export default {
         closeDialog() {
             this.$emit('close');
         },
+        openDialog() {
+            this.$emit('open');
+        },
         addItem() {
-            this.form.positions.push(this.selectedPosition.label);
+            this.form.positions.push(this.selectedPosition);
             this.selectedPosition = null;
         },
+    },
+    watch: {
+        isVisible(newVal, oldVal) {
+            if (newVal) {
+                this.loadUnitAndPosition();
+            }
+        }
     },
     setup(props, {emit}) {
         const { proxy } = getCurrentInstance();
@@ -104,7 +114,7 @@ export default {
         const selectedPosition = ref(null);
         const toast = useToast();
 
-        onMounted(async () => {
+        const loadUnitAndPosition = async () => {
             const responseUnit = await axios.get('/units');
             units.value = responseUnit.data.map(unit => ({
                 id: unit.unit_name,
@@ -116,6 +126,10 @@ export default {
                 id: position.position_name,
                 label: position.position_name
             }));
+        }
+
+        onMounted(async () => {
+            await loadUnitAndPosition();
         });
 
         const form = ref({
@@ -130,7 +144,6 @@ export default {
         const { errors } = usePage().props.value;
 
         const addNewUser = () => {
-            form.value.unit_id = form.value.unit_id.label;
             axios.post('/add-new-user', form.value).then(() => {
                 form.value.name = '';
                 form.value.username = '';
@@ -154,6 +167,7 @@ export default {
         return {
             form,
             addNewUser,
+            loadUnitAndPosition,
             errors,
             units,
             positions,
@@ -169,6 +183,7 @@ export default {
 .modal {
     display: block;
     background: rgba(0, 0, 0, 0.5);
+    margin-top: 50px;
 }
 * {
     font-size: 12px;
