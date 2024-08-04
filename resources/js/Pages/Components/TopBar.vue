@@ -1,6 +1,6 @@
 <template>
     <header class="top-bar d-flex justify-content-between">
-        <div>Laravel 11 with InertiaJS and Vue 3</div>
+        <div>RSIA PURI BUNDA</div>
         <div>
             Welcome, <b>{{ username }}</b> - <a href="#" @click="logout">Logout</a>
         </div>
