@@ -1,11 +1,12 @@
 <template>
     <Main :auth="auth">
             <h1 style="font-size: 20px">Employee</h1>
-            <button class="btn btn-primary mt-5" @click="showDialog">Add New User</button>
+            <button class="btn btn-outline-primary mt-5" @click="showDialog">Add New Employee</button>
             <NewUserDialog
-                :title="'Add New User'"
+                :title="'Add New Employee'"
                 :isVisible="isDialogVisible"
                 @userAdded="refreshDataTable"
+                @open="showDialog"
                 @close="closeDialog"></NewUserDialog>
             <DataTable
                 :key="dataTableKey"
@@ -13,6 +14,13 @@
                 class="display"
                 :options="dataTableOptions"
             >
+                <template #column-6="action">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-primary" @click="editEmployee(action.rowData)">Edit</button>
+                        <button type="button" class="btn btn-info" @click="viewEmployee(action.rowData)">View</button>
+                        <button type="button" class="btn btn-danger" @click="deleteEmployee(action.rowData)">Delete</button>
+                    </div>
+                </template>
             </DataTable>
     </Main>
 </template>
@@ -71,7 +79,7 @@ export default {
                     }
                 },
                 columns: [
-                    { data: 'id', title: 'ID' },
+                    { data: 'id', title: 'ID', className: 'text-end' },
                     { data: 'name', title: 'Name' },
                     { data: 'username', title: 'Username' },
                     { data: 'unit', title: 'Unit' },
@@ -91,15 +99,26 @@ export default {
         }
     },
     methods: {
-        closeDialog() {
+        closeDialog($event) {
+            console.log('y',$event);
             this.isDialogVisible = false;
         },
-        showDialog() {
+        showDialog($event) {
+            console.log('x',$event)
             this.isDialogVisible = true;
         },
         async refreshDataTable() {
             this.isDialogVisible = false;
             this.dataTableKey += 1;
+        },
+        viewEmployee($event) {
+            console.log($event);
+        },
+        editEmployee($event) {
+            console.log($event);
+        },
+        deleteEmployee($event) {
+            console.log($event)
         }
     },
 }

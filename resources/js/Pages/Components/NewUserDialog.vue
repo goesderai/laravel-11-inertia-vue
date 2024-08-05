@@ -43,8 +43,7 @@
                                 push-tags
                                 :options="positions"
                                 v-model="selectedPosition" />
-                            <button type="button" class="mt-3 btn btn-outline-success" @click="addItem">Add Position
-                            </button>
+                            <button type="button" class="mt-3 btn btn-outline-success" @click="addItem">Add Position</button>
                         </div>
 
                         <div class="mb-3">
@@ -67,12 +66,12 @@
 </template>
 
 <script>
-import {getCurrentInstance, onMounted, ref} from "vue";
+import {ref, onMounted, getCurrentInstance} from "vue";
 import {usePage} from "@inertiajs/inertia-vue3";
 import axios from 'axios';
 import 'vue-select/dist/vue-select.css'; // Import CSS
 import vSelect from 'vue-select';
-import {useToast} from 'vue-toastification';
+import { useToast } from 'vue-toastification';
 
 export default {
     components: {vSelect},
@@ -94,13 +93,13 @@ export default {
             this.$emit('open');
         },
         addItem() {
-            this.form.positions.push(this.selectedPosition);
+            this.form.positions.push(this.selectedPosition.label);
             this.selectedPosition = null;
         },
     },
     watch: {
         isVisible(newVal, oldVal) {
-            if (newVal) {
+            if(newVal) {
                 this.loadUnitAndPosition();
             }
         }
