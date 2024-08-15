@@ -2,12 +2,25 @@
     <Main :auth="auth">
             <h1 style="font-size: 20px">Employee</h1>
             <button class="btn btn-outline-primary mt-5" @click="showDialog">Add New Employee</button>
+
             <NewUserDialog
-                :title="'Add New Employee'"
+                :title="title"
                 :isVisible="isDialogVisible"
+                :add-new="modeAddNew"
+                :data="data"
                 @userAdded="refreshDataTable"
                 @open="showDialog"
-                @close="closeDialog"></NewUserDialog>
+                @close="closeDialog">
+            </NewUserDialog>
+
+            <CommonDialog
+                :title="dialogDeleteTitle"
+                :content="'Are you sure want to delete this data?'"
+                :isVisible="isConfirmDeleteVisible"
+                @close="closeConfirmationDelete"
+                @ok="doDelete"
+            ></CommonDialog>
+
             <DataTable
                 :key="dataTableKey"
                 ref="dataTable"
@@ -37,6 +50,7 @@ import 'datatables.net-dt/css/dataTables.dataTables.min.css';
 DataTable.use(DataTablesLib);
 import axios from 'axios';
 import Main from "./Main.vue";
+import CommonDialog from "./Components/CommonDialog.vue";
 
 export default {
     name: 'Employee',
@@ -44,6 +58,7 @@ export default {
         auth: Object,
     },
     components: {
+        CommonDialog,
         Main,
         NewUserDialog,
         TopBar,
@@ -55,7 +70,13 @@ export default {
     data() {
         return {
             isDialogVisible: false,
+            isConfirmDeleteVisible: false,
+            modeAddNew: 'n',
             dataTableKey: 0, // Initialize the key
+            title: 'Add New Employee',
+            dialogDeleteTitle: 'Delete Employee',
+            data: {
+            },
             dataTableOptions: {
                 processing: true,
                 serverSide: true,
@@ -100,11 +121,18 @@ export default {
     },
     methods: {
         closeDialog($event) {
-            console.log('y',$event);
             this.isDialogVisible = false;
         },
+        closeConfirmationDelete($event) {
+          this.isConfirmDeleteVisible = false;
+        },
         showDialog($event) {
-            console.log('x',$event)
+            this.isDialogVisible = true;
+            this.title = 'Add New Employee';
+            this.modeAddNew = 'n';
+
+        },
+        showDialog2() {
             this.isDialogVisible = true;
         },
         async refreshDataTable() {
@@ -112,13 +140,24 @@ export default {
             this.dataTableKey += 1;
         },
         viewEmployee($event) {
-            console.log($event);
+            this.modeAddNew = 'v';
+            this.data = $event;
+            this.title = 'View Employee';
+            this.showDialog2();
         },
         editEmployee($event) {
-            console.log($event);
+            this.modeAddNew = 'e';
+            this.data = $event;
+            this.title = 'Edit Employee';
+            this.showDialog2()
         },
         deleteEmployee($event) {
-            console.log($event)
+            this.modeAddNew = 'd';
+            this.data = $event;
+            this.isConfirmDeleteVisible = true;
+        },
+        doDelete($event) {
+
         }
     },
 }
@@ -130,5 +169,12 @@ export default {
 }
 * {
    font-size: 12px;
+}
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s;
+}
+
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+    opacity: 0;
 }
 </style>

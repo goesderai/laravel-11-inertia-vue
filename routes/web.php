@@ -19,7 +19,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/positions', [PositionController::class, 'index']);
     Route::get('/units', [UnitController::class, 'index']);
+
     Route::get('/employees-paginated', [EmployeeController::class, 'employeePaginated']);
+    Route::get('/get-employee', [EmployeeController::class, 'getEmployee']);
+
     Route::get('/units-paginated', [UnitController::class, 'unitPaginated']);
     Route::get('/positions-paginated', [PositionController::class, 'positionPaginated']);
     Route::get('/login-histories-paginated', [LoginHistoryController::class, 'loginHistoryPaginated']);
